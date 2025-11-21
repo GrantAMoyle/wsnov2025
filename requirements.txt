@@ -3,3 +3,4 @@ waitress
 Faker
 google-cloud-storage
 google-genai
+google-cloud-bigquery

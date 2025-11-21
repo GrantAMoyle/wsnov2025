@@ -12,6 +12,22 @@ logger = logging.getLogger('waitress')
 logger.setLevel(logging.DEBUG)
 fake = Faker()
 
+@app.route("/querybq")
+def getqueryresults():
+  # query the chicagotaxi dataset in BigQuery and the average taxi fare
+  from google.cloud import bigquery
+  client = bigquery.Client()
+  query = """
+    SELECT AVG(fare) as average_fare
+    FROM `bigquery-public-data.chicago_taxi_trips.taxi_trips`
+    WHERE fare IS NOT NULL
+  """
+  query_job = client.query(query)
+  results = query_job.result()
+  for row in results:
+    average_fare = row.average_fare
+  return f"The average taxi fare in Chicago is ${average_fare:.2f}"
+
 @app.route("/listfiles")
 def getListofFiles():
   # get a list of files in the Google Cloud  bucket named friday-demo-bucket
@@ -27,7 +43,9 @@ def getfunfact():
   # using gemini api, return a fun fact about Wayne State in Detroit
   from google import genai
   from google.genai import types
-  import base64
+  
+  # You must specify a project and location for Vertex AI
+  project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
   client = genai.Client(
       vertexai=True
