@@ -99,7 +99,7 @@ def getRoot():
 def getenv():
   # return all the environment variables
   env_vars = os.environ
-  env_vars_str = "\n".join([f"{key}={value}" for key, value in env_vars.items()])
+  env_vars_str = "\n<br/>".join([f"{key}={value}" for key, value in env_vars.items()])
   return f"Environment Variables:\n{env_vars_str}\n"
 
 @app.route("/headers")
