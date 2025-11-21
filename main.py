@@ -95,6 +95,13 @@ def getfunfact():
 def getRoot():
   return "ROI Training Demo Main Page is Working!\n"
 
+@app.route("/getenv")
+def getenv():
+  # return all the environment variables
+  env_vars = os.environ
+  env_vars_str = "\n".join([f"{key}={value}" for key, value in env_vars.items()])
+  return f"Environment Variables:\n{env_vars_str}\n"
+
 @app.route("/headers")
 def show_headers():
   client_ip = request.remote_addr
