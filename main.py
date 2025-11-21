@@ -95,6 +95,19 @@ def getfunfact():
 def getRoot():
   return "ROI Training Demo Main Page is Working!\n"
 
+@app.route("/getsecret")
+def getSecret():
+  # read the secret named apiapplicationkey from google secret manager
+  from google.cloud import secretmanager
+  client = secretmanager.SecretManagerServiceClient()
+  project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
+  secret_name = "apikeyforexternalcalls"
+  secret_version = "latest"
+  name = f"projects/{project_id}/secrets/{secret_name}/versions/{secret_version}"
+  response = client.access_secret_version(name=name)
+  secret_value = response.payload.data.decode("UTF-8")  
+  return secret_value + "\n"
+
 @app.route("/getenv")
 def getenv():
   # return all the environment variables
