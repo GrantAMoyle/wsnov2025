@@ -1,3 +1,5 @@
+import types
+from xmlrpc import client
 from flask import Flask, request
 from waitress import serve
 from faker import Faker
@@ -19,7 +21,58 @@ def getListofFiles():
   blobs = bucket.list_blobs()
   files = [blob.name for blob in blobs]
   return str(files)
+
+@app.route("/getfunfact")
+def getfunfact():
+  # using gemini api, return a fun fact about Wayne State in Detroit
+  from google import genai
+  from google.genai import types
+  import base64
+
+  client = genai.Client(
+      vertexai=True
+  )
+
+  model = "gemini-2.5-flash-preview-09-2025"
+  contents = [
+    types.Content(
+      role="user",
+      parts=[
+        types.Part.from_text(text="""Give me a fun fact about Wayne State University in Detroit.""")
+      ]
+    ),
+  ]
   
+  generate_content_config = types.GenerateContentConfig(
+    temperature = 0.5,
+    top_p = 0.95,
+    max_output_tokens = 65535,
+    safety_settings = [types.SafetySetting(
+      category="HARM_CATEGORY_HATE_SPEECH",
+      threshold="OFF"
+    ),types.SafetySetting(
+      category="HARM_CATEGORY_DANGEROUS_CONTENT",
+      threshold="OFF"
+    ),types.SafetySetting(
+      category="HARM_CATEGORY_SEXUALLY_EXPLICIT",
+      threshold="OFF"
+    ),types.SafetySetting(
+      category="HARM_CATEGORY_HARASSMENT",
+      threshold="OFF"
+    )]
+  )
+
+  output=""
+  for chunk in client.models.generate_content_stream(
+    model = model,
+    contents = contents,
+    config = generate_content_config,
+    ):
+    if not chunk.candidates or not chunk.candidates[0].content or not chunk.candidates[0].content.parts:
+        continue
+    output=output + chunk.text
+  return(output)
+
 @app.route("/")
 def getRoot():
   return "ROI Training Demo Main Page is Working!\n"
