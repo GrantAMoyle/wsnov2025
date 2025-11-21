@@ -10,6 +10,16 @@ logger = logging.getLogger('waitress')
 logger.setLevel(logging.DEBUG)
 fake = Faker()
 
+@app.route("/listfiles")
+def getListofFiles():
+  # get a list of files in the Google Cloud  bucket named friday-demo-bucket
+  from google.cloud import storage
+  storage_client = storage.Client()
+  bucket = storage_client.get_bucket("friday-demo-bucket")
+  blobs = bucket.list_blobs()
+  files = [blob.name for blob in blobs]
+  return str(files)
+  
 @app.route("/")
 def getRoot():
   return "ROI Training Demo is broken!\n"
