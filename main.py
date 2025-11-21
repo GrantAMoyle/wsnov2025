@@ -100,7 +100,7 @@ def getSecret():
   # read the secret named apiapplicationkey from google secret manager
   from google.cloud import secretmanager
   client = secretmanager.SecretManagerServiceClient()
-  project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
+  project_id = "containers-on-gc" # replace with your GCP project ID
   secret_name = "apikeyforexternalcalls"
   secret_version = "latest"
   name = f"projects/{project_id}/secrets/{secret_name}/versions/{secret_version}"
