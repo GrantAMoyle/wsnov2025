@@ -22,7 +22,7 @@ def getListofFiles():
   
 @app.route("/")
 def getRoot():
-  return "ROI Training Demo is broken!\n"
+  return "ROI Training Demo Main Page is Working!\n"
 
 @app.route("/headers")
 def show_headers():
@@ -47,7 +47,7 @@ def getRandomName():
 
 @app.route("/version")
 def version():
-  return "ROI Training Demo 1.2\n"
+  return "ROI Training Demo 1.5\n"
 
 if __name__ == "__main__":
   serve(app,host="0.0.0.0",port=int(os.environ.get("PORT", 8080)))

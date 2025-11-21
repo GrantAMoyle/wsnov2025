@@ -1,3 +1,4 @@
 Flask
 waitress
 Faker
+google-cloud-storage
